@@ -41,6 +41,7 @@ class AppFixtures extends Fixture
                 ->setFuelType($faker->vehicleFuelType)
                 ->setNbKm($faker->numberBetween(20000, 250000))
                 ->setType($faker->vehicleType)
+                ->setVisible($faker->boolean(75))
                 ->setBrand($brand);
 
             $manager->persist($car);

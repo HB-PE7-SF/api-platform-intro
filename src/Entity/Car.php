@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -18,6 +21,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
         // Post, Put, Patch, Delete
     ]
 )]
+#[ApiFilter(BooleanFilter::class, properties: ['visible'])]
+#[ApiFilter(SearchFilter::class, properties: ['name' => 'ipartial'])]
 class Car
 {
     #[ORM\Id]
@@ -53,7 +58,11 @@ class Car
     #[ORM\ManyToOne(inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['cars:read'])]
+    #[ApiFilter(SearchFilter::class, properties: ['brand.name' => 'ipartial'])]
     private ?Brand $brand = null;
+
+    #[ORM\Column]
+    private ?bool $visible = null;
 
     public function getId(): ?int
     {
@@ -140,6 +149,18 @@ class Car
     public function setBrand(?Brand $brand): static
     {
         $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function isVisible(): ?bool
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(bool $visible): static
+    {
+        $this->visible = $visible;
 
         return $this;
     }
