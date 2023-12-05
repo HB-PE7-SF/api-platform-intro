@@ -3,38 +3,56 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\CarRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CarRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['cars:read']],
+    operations: [
+        new GetCollection(),
+        new Get()
+        // Post, Put, Patch, Delete
+    ]
+)]
 class Car
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['cars:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars:read'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['cars:read'])]
     private ?int $year = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars:read'])]
     private ?string $type = null;
 
     #[ORM\Column]
+    #[Groups(['cars:read'])]
     private ?int $nbKm = null;
 
     #[ORM\Column]
+    #[Groups(['cars:read'])]
     private ?int $doorCount = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['cars:read'])]
     private ?string $fuelType = null;
 
     #[ORM\ManyToOne(inversedBy: 'cars')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['cars:read'])]
     private ?Brand $brand = null;
 
     public function getId(): ?int
